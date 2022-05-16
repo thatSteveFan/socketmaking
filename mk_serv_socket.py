@@ -8,14 +8,15 @@ import time
 HOST = ""
 PORT = 5000
 def main():
-    s = socket()
-    s.setsockopt(IPPROTO_TCP, TCP_MAXSEG, 8000)
-    s.connect((HOST, PORT))
-    print('Connected to ', HOST)
-    r = b'a'
-    print(f"sending {r}")
-    s.send(r)
-    time.sleep(60)
+    with socket() as s:
+        s.setsockopt(IPPROTO_TCP, TCP_MAXSEG, 8000)
+        s.bind((HOST, PORT))
+        s.listen()
+        con, addr = s.accept()
+        st = con.recv(2**15)
+        print(f'recieved {st}')
+
+        time.sleep(60)
 
 
 
